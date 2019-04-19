@@ -39,5 +39,5 @@ for link in mainDivLinks:
 		if str(link.attrs['href'].split('.')[-1]) in videoFormat:
 			finallinks.append(link.attrs['href'])
 
-for finallink in finallinks[:2]:
+for finallink in finallinks:
 	downloadFile(finallink)
