@@ -68,7 +68,7 @@ for pageLink in page_links:
 
 #download only the latest songs
 #can restrict the pages to only 1 since the pages are plenty; it's optional though 
-for finalpageLink in finalpageLinks[4:6]:
+for finalpageLink in finalpageLinks:
 	finalPageArticles.append(getPageArticles(finalpageLink))
 
 #convert list of articles into one single list
