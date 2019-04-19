@@ -30,9 +30,10 @@ def getMp3Link(articleUrl):
 	page = requests.get(articleUrl)
 	soup = BeautifulSoup(page.text,"html.parser")
 	mp3link = soup.find('a','zbPlayer-download')
-	# if mp3link is not None:
-	rawlink = mp3link.attrs['href']
-	return rawlink
+	if mp3link is not None:
+		rawlink = mp3link.attrs['href']
+		return rawlink
+	
 
 def flattenList(sources):
 	flatList = []
@@ -67,7 +68,7 @@ for pageLink in page_links:
 
 #download only the latest songs
 #can restrict the pages to only 1 since the pages are plenty; it's optional though 
-for finalpageLink in finalpageLinks[:1]:
+for finalpageLink in finalpageLinks[4:6]:
 	finalPageArticles.append(getPageArticles(finalpageLink))
 
 #convert list of articles into one single list
@@ -78,5 +79,8 @@ for allArticle in allArticles:
 
 #can restrict the links to only 2 since the links may be too much; it's optional though
 for finalmp3link in finalmp3links:
-	downloadFile(finalmp3link)
+	if finalmp3link is not None:
+		if downloadFile(finalmp3link):
+			print("Successfully downloaded",finalmp3link)
+		
 
