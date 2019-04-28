@@ -12,7 +12,7 @@ import time
 
 base_dir = os.getcwd()
 
-dir_path = os.path.join(base_dir,"Music")
+dir_path = os.path.join(base_dir,"PyHO")
 
 if not os.path.exists(dir_path):
 	os.mkdir(dir_path)
@@ -44,13 +44,18 @@ def flattenList(sources):
 
 def downloadFile(url):
 	name = str(url.split('/')[-1])
-	print("Downloading {}".format(url))
-	urllib.request.urlretrieve(url,os.path.join(dir_path,name))
-	time.sleep(1)
+	if not os.path.exists(os.path.join(dir_path,name)):
+		print("Downloading {}".format(url))
+		urllib.request.urlretrieve(url,os.path.join(dir_path,name))
+		time.sleep(1)
+	else:
+		print("File "+name+ "Already Exists")
 
 entryUrl = "https://www.ghanamotion.com/music" 
 r = requests.get(entryUrl)
 soup = BeautifulSoup(r.text,"html.parser")
+
+# print(soup)
 
 # to store all the mp3 links from the articles
 finalmp3links = []
@@ -63,24 +68,33 @@ finalPageArticles = []
 # get the links to all the main pages containing the articles
 page_links = soup.find_all('a','page')
 
-for pageLink in page_links:
+# print(page_links)
+
+for pageLink in page_links[:1]:
 	finalpageLinks.append(pageLink.attrs['href'])
+
+# print(finalpageLinks[:2])
 
 #download only the latest songs
 #can restrict the pages to only 1 since the pages are plenty; it's optional though 
 for finalpageLink in finalpageLinks:
 	finalPageArticles.append(getPageArticles(finalpageLink))
 
+# print(finalPageArticles)
+
 #convert list of articles into one single list
 allArticles = flattenList(finalPageArticles)
+
+# print(allArticles)
 
 for allArticle in allArticles:
 	finalmp3links.append(getMp3Link(allArticle))
 
+# print(finalmp3links)
+
 #can restrict the links to only 2 since the links may be too much; it's optional though
-for finalmp3link in finalmp3links:
+for finalmp3link in finalmp3links[:2]:
 	if finalmp3link is not None:
-		if downloadFile(finalmp3link):
-			print("Successfully downloaded",finalmp3link)
+		downloadFile(finalmp3link)
 		
 
